@@ -23,7 +23,7 @@ import { Textarea } from "./ui/textarea";
 
 const ReviewForm = () => {
   const handleSubmit = async (e: FormEvent) => {
-    // e.preventDefault();
+ 
     console.log("Form submitted");
 
     const form = e.target as HTMLFormElement;

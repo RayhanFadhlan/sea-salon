@@ -1,51 +1,107 @@
-"use client";
+import { useEffect, useState } from "react";
+import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { format } from "date-fns"
-import { cn } from "@/lib/utils"
+import { format } from "date-fns";
+import { cn } from "@/lib/utils";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import { CalendarIcon } from "lucide-react";
-import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { Calendar } from "@/components/ui/calendar"
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover"
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { Calendar } from "@/components/ui/calendar";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
-import { FormEvent } from "react";
+import { useToast } from "@/components/ui/use-toast";
 
-const services = [
-  "Haircuts and styling",
-  "Manicure and pedicure",
-  "Facial treatments",
-]
+type Branch = {
+  id: number;
+  name: string;
+  location: string;
+  open_time: string;
+  close_time: string;
+};
+
+type Service = {
+  id: number;
+  name: string;
+  duration: number;
+};
+
+type ReserveFormProps = {
+  user_id: number;
+};
 
 const reservationSchema = z.object({
   name: z.string().min(5, "Please enter your name."),
-  phoneNumber: z.string().min(7, "Please enter a valid phone number."),
-  serviceType: z.string(),
+  phone: z.string().min(5, "Please enter a valid phone number (min 5 digit)."),
+  branch_id: z.number(),
+  service_id: z.number(),
   date: z.date(),
   time: z.string(),
 });
 
-export function ReserveForm() {
+export function ReserveForm({ user_id }: ReserveFormProps) {
+  const { toast } = useToast();
   const form = useForm<z.infer<typeof reservationSchema>>({
     resolver: zodResolver(reservationSchema),
   });
 
-  const onSubmit = (e: z.infer<typeof reservationSchema>) => {
-      // You might want to call form.handleSubmit here
+  const [branches, setBranches] = useState<Branch[]>([]);
+  const [services, setServices] = useState<Service[]>([]);
+
+  useEffect(() => {
+    const fetchBranches = async () => {
+      try {
+        const response = await fetch("/api/branch");
+        const responseData = await response.json();
+        setBranches(responseData.data);
+      } catch (error) {
+        console.error("Failed to fetch branches:", error);
+      }
+    };
+
+    fetchBranches();
+  }, []);
+
+  const fetchServices = async (branchId: number) => {
+    try {
+      const response = await fetch(`/api/servicesByBranch?branch_id=${branchId}`);
+      const responseData = await response.json();
+      setServices(responseData.data);
+    } catch (error) {
+      console.error("Failed to fetch services:", error);
+    }
+  };
+
+  const onBranchChange = (branchId: string) => {
+    form.setValue("branch_id", parseInt(branchId, 10));
+    fetchServices(Number(branchId));
+  };
+
+  const onServiceChange = (serviceId: string) => {
+    form.setValue("service_id", parseInt(serviceId, 10));
+  };
+
+  const onSubmit: SubmitHandler<z.infer<typeof reservationSchema>> = async (data) => {
+    const formattedDate = format(new Date(data.date), 'yyyy-MM-dd');
+    const formattedData = { ...data, date: formattedDate, user_id: user_id, branch_id: Number(data.branch_id), service_id: Number(data.service_id) };
+    console.log(formattedData);
+
+    try {
+      const response = await fetch("/api/reservation", {
+        method: "POST",
+        body: JSON.stringify(formattedData),
+      });
+      if (response.ok) {
+        toast({ description: "Reservation added successfully" });
+        
+      } else {
+        const errorResponse = await response.json();
+        toast({ description: errorResponse.message, variant: "destructive" });
+      }
+    } catch (error: any) {
+      toast({ description: error.message, variant: "destructive" });
+    }
   };
 
   return (
@@ -56,7 +112,7 @@ export function ReserveForm() {
           name="name"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Username</FormLabel>
+              <FormLabel>Full Name</FormLabel>
               <FormControl>
                 <Input placeholder="Your name" {...field} />
               </FormControl>
@@ -66,7 +122,7 @@ export function ReserveForm() {
         />
         <FormField
           control={form.control}
-          name="phoneNumber"
+          name="phone"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Phone Number</FormLabel>
@@ -79,11 +135,35 @@ export function ReserveForm() {
         />
         <FormField
           control={form.control}
-          name="serviceType"
+          name="branch_id"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Branch</FormLabel>
+              <Select onValueChange={onBranchChange} defaultValue={field.value?.toString()}>
+                <FormControl>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select a branch" />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent>
+                  {branches.map((branch) => (
+                    <SelectItem key={branch.id} value={String(branch.id)}>
+                      {branch.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="service_id"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Service Type</FormLabel>
-              <Select onValueChange={field.onChange} defaultValue={field.value}>
+              <Select onValueChange={onServiceChange} defaultValue={field.value?.toString()}>
                 <FormControl>
                   <SelectTrigger>
                     <SelectValue placeholder="Select a service type" />
@@ -91,14 +171,12 @@ export function ReserveForm() {
                 </FormControl>
                 <SelectContent>
                   {services.map((service) => (
-                    <SelectItem key={service} value={service}>
-                      {service}
+                    <SelectItem key={service.id} value={String(service.id)}>
+                      {service.name}
                     </SelectItem>
                   ))}
-                 
                 </SelectContent>
               </Select>
-              
               <FormMessage />
             </FormItem>
           )}
@@ -119,11 +197,7 @@ export function ReserveForm() {
                         !field.value && "text-muted-foreground"
                       )}
                     >
-                      {field.value ? (
-                        format(field.value, "PPP")
-                      ) : (
-                        <span>Pick a date</span>
-                      )}
+                      {field.value ? format(field.value, "PPP") : <span>Pick a date</span>}
                       <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
                     </Button>
                   </FormControl>
@@ -133,14 +207,11 @@ export function ReserveForm() {
                     mode="single"
                     selected={field.value}
                     onSelect={field.onChange}
-                    disabled={(date) =>
-                      date < new Date()
-                    }
+                    disabled={(date) => date < new Date()}
                     initialFocus
                   />
                 </PopoverContent>
               </Popover>
-              
               <FormMessage />
             </FormItem>
           )}
@@ -151,26 +222,9 @@ export function ReserveForm() {
           render={({ field }) => (
             <FormItem>
               <FormLabel>Time</FormLabel>
-              <Select onValueChange={field.onChange} defaultValue={field.value}>
-                <FormControl>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select time" />
-                  </SelectTrigger>
-                </FormControl>
-                <SelectContent>
-                {Array.from({ length: 13 }, (_, index) => {
-            const hour = 9 + index; // Start from 9
-            const formattedHour = `${hour < 10 ? '0' : ''}${hour}:00`; // Format to 09:00, 10:00, etc.
-            return (
-              <SelectItem key={formattedHour} value={formattedHour}>
-                {formattedHour}
-              </SelectItem>
-            );
-          })}
-                 
-                </SelectContent>
-              </Select>
-              
+              <FormControl>
+                <Input type="time" {...field} />
+              </FormControl>
               <FormMessage />
             </FormItem>
           )}

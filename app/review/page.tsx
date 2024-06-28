@@ -1,6 +1,5 @@
 import React from 'react';
-
-import ReviewList from '@/components/review-list';
+import {ReviewList} from '@/components/review-list';
 import ReviewForm from '@/components/review-form';
 
 

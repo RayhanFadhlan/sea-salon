@@ -1,4 +1,3 @@
-
 import { prisma } from "@/lib/prisma";
 export const GET = async (req : Request) => {
     if(req.method !== 'GET'){
@@ -16,6 +15,8 @@ export const GET = async (req : Request) => {
 }
 
 export const POST = async (req : Request, ) => {
+
+
     if(req.method !== 'POST'){
         return Response.json({
             status: 405,

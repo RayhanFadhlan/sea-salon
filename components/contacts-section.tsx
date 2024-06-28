@@ -13,7 +13,7 @@ const contacts = [
 
 const ContactSection = () => {
     return (
-        <section id="about" className="bg-muted py-16 px-6 md:px-12 bg-gray-100">
+        <section id="about" className="bg-muted py-16 px-6 md:px-12 bg-background">
         <div className="max-w-3xl mx-auto text-center space-y-4">
           <h2 className="text-3xl font-bold">Contact Us</h2>
           <ul>
