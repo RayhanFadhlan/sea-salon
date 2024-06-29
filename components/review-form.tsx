@@ -20,10 +20,10 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "./ui/textarea";
+import { revalidatePath } from "next/cache";
 
 const ReviewForm = () => {
   const handleSubmit = async (e: FormEvent) => {
- 
     console.log("Form submitted");
 
     const form = e.target as HTMLFormElement;
@@ -42,6 +42,7 @@ const ReviewForm = () => {
       if (response.ok) {
         console.log("Review submitted successfully");
         console.log(await response.json());
+        revalidatePath("/review");
       } else {
         // Handle non-200 responses
         const errorResponse = await response.json();
@@ -83,7 +84,11 @@ const ReviewForm = () => {
             </div>
             <div className="flex flex-col space-y-1.5">
               <Label htmlFor="comment">Comment</Label>
-              <Textarea id="comment" name="comment" placeholder="Leave a comment" />
+              <Textarea
+                id="comment"
+                name="comment"
+                placeholder="Leave a comment"
+              />
             </div>
           </div>
         </CardContent>

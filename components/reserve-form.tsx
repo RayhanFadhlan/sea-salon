@@ -6,10 +6,27 @@ import { cn } from "@/lib/utils";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import { CalendarIcon } from "lucide-react";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 import { Calendar } from "@/components/ui/calendar";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/components/ui/use-toast";
 
@@ -65,7 +82,9 @@ export function ReserveForm({ user_id }: ReserveFormProps) {
 
   const fetchServices = async (branchId: number) => {
     try {
-      const response = await fetch(`/api/servicesByBranch?branch_id=${branchId}`);
+      const response = await fetch(
+        `/api/servicesByBranch?branch_id=${branchId}`,
+      );
       const responseData = await response.json();
       setServices(responseData.data);
     } catch (error) {
@@ -82,9 +101,17 @@ export function ReserveForm({ user_id }: ReserveFormProps) {
     form.setValue("service_id", parseInt(serviceId, 10));
   };
 
-  const onSubmit: SubmitHandler<z.infer<typeof reservationSchema>> = async (data) => {
-    const formattedDate = format(new Date(data.date), 'yyyy-MM-dd');
-    const formattedData = { ...data, date: formattedDate, user_id: user_id, branch_id: Number(data.branch_id), service_id: Number(data.service_id) };
+  const onSubmit: SubmitHandler<z.infer<typeof reservationSchema>> = async (
+    data,
+  ) => {
+    const formattedDate = format(new Date(data.date), "yyyy-MM-dd");
+    const formattedData = {
+      ...data,
+      date: formattedDate,
+      user_id: user_id,
+      branch_id: Number(data.branch_id),
+      service_id: Number(data.service_id),
+    };
     console.log(formattedData);
 
     try {
@@ -94,7 +121,6 @@ export function ReserveForm({ user_id }: ReserveFormProps) {
       });
       if (response.ok) {
         toast({ description: "Reservation added successfully" });
-        
       } else {
         const errorResponse = await response.json();
         toast({ description: errorResponse.message, variant: "destructive" });
@@ -127,7 +153,10 @@ export function ReserveForm({ user_id }: ReserveFormProps) {
             <FormItem>
               <FormLabel>Phone Number</FormLabel>
               <FormControl>
-                <Input placeholder="Enter a phone number with minimum 7 digits" {...field} />
+                <Input
+                  placeholder="Enter a phone number with minimum 7 digits"
+                  {...field}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -139,7 +168,10 @@ export function ReserveForm({ user_id }: ReserveFormProps) {
           render={({ field }) => (
             <FormItem>
               <FormLabel>Branch</FormLabel>
-              <Select onValueChange={onBranchChange} defaultValue={field.value?.toString()}>
+              <Select
+                onValueChange={onBranchChange}
+                defaultValue={field.value?.toString()}
+              >
                 <FormControl>
                   <SelectTrigger>
                     <SelectValue placeholder="Select a branch" />
@@ -163,7 +195,10 @@ export function ReserveForm({ user_id }: ReserveFormProps) {
           render={({ field }) => (
             <FormItem>
               <FormLabel>Service Type</FormLabel>
-              <Select onValueChange={onServiceChange} defaultValue={field.value?.toString()}>
+              <Select
+                onValueChange={onServiceChange}
+                defaultValue={field.value?.toString()}
+              >
                 <FormControl>
                   <SelectTrigger>
                     <SelectValue placeholder="Select a service type" />
@@ -194,10 +229,14 @@ export function ReserveForm({ user_id }: ReserveFormProps) {
                       variant={"outline"}
                       className={cn(
                         "w-[240px] pl-3 text-left font-normal",
-                        !field.value && "text-muted-foreground"
+                        !field.value && "text-muted-foreground",
                       )}
                     >
-                      {field.value ? format(field.value, "PPP") : <span>Pick a date</span>}
+                      {field.value ? (
+                        format(field.value, "PPP")
+                      ) : (
+                        <span>Pick a date</span>
+                      )}
                       <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
                     </Button>
                   </FormControl>

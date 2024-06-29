@@ -4,7 +4,6 @@ import { prisma } from "@/lib/prisma";
 import Credentials from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
 
-
 const handler = NextAuth({
   adapter: PrismaAdapter(prisma),
   providers: [
@@ -12,32 +11,39 @@ const handler = NextAuth({
       name: "Credentials",
       credentials: {
         email: { label: "Email", type: "email", placeholder: "email" },
-        password: { label: "Password", type: "password", placeholder: "password"}
+        password: {
+          label: "Password",
+          type: "password",
+          placeholder: "password",
+        },
       },
       async authorize(credentials) {
         const user = await prisma.user.findUnique({
           where: {
-            email: credentials?.email
-          }
+            email: credentials?.email,
+          },
         });
-        console.log(user?.email)
-        console.log(user?.password)
-        console.log(credentials?.password)
+        console.log(user?.email);
+        console.log(user?.password);
+        console.log(credentials?.password);
         if (!user) {
-            console.log("User not found")
+          console.log("User not found");
           return null;
         }
 
-        const isMatch = await bcrypt.compare(credentials?.password as string, user.password);
+        const isMatch = await bcrypt.compare(
+          credentials?.password as string,
+          user.password,
+        );
         if (!isMatch) {
           return null;
         }
 
         return user;
-      }
-    })
+      },
+    }),
   ],
-  
+
   callbacks: {
     async jwt({ token, user }) {
       if (user) {
@@ -53,26 +59,26 @@ const handler = NextAuth({
       session.name = token.name;
       session.role = token.role;
       return session;
-    }
+    },
   },
   session: {
     strategy: "jwt",
-    maxAge: 60 * 60 
+    maxAge: 60 * 60,
   },
   pages: {
-    signIn: "/signin"
-  }
+    signIn: "/signin",
+  },
 });
 
 export { handler as GET, handler as POST };
 
 declare module "next-auth/jwt" {
-    interface JWT {
-        id: number;
-        name: string;
-        role: string;
-    }
+  interface JWT {
+    id: number;
+    name: string;
+    role: string;
   }
+}
 
 declare module "next-auth" {
   interface User {
@@ -88,6 +94,4 @@ declare module "next-auth" {
     name: string;
     role: string;
   }
-
 }
-
