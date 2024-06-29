@@ -1,38 +1,37 @@
 "use client";
-import { FormEvent, useState } from 'react';
+import { FormEvent, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useToast } from './ui/use-toast';
-import { redirect } from 'next/navigation';
-import { revalidatePath } from 'next/cache';
+import { useToast } from "./ui/use-toast";
+import { redirect } from "next/navigation";
+import { revalidatePath } from "next/cache";
 
 export function AddBranchForm() {
-  const {toast} = useToast();
+  const { toast } = useToast();
 
-  const handleSubmit = async (e : FormEvent) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     const form = e.target as HTMLFormElement;
     const formData = new FormData(form);
     const formObject = Object.fromEntries(formData.entries());
 
-    try{
+    try {
       const response = await fetch("/api/admin/addbranch", {
         method: "POST",
-      
+
         body: JSON.stringify(formObject),
       });
       if (response.ok) {
-        toast({description: "Branch added successfully"});
+        toast({ description: "Branch added successfully" });
       } else {
         const errorResponse = await response.json();
-        toast({description: errorResponse.message, variant: "destructive"});
-        
+        toast({ description: errorResponse.message, variant: "destructive" });
       }
-    }catch(error){
-      toast({description: "An error occurred", variant: "destructive"});
+    } catch (error) {
+      toast({ description: "An error occurred", variant: "destructive" });
     }
-  }
+  };
 
   return (
     <form onSubmit={handleSubmit} className="w-full max-w-[400px] space-y-4">
@@ -60,22 +59,11 @@ export function AddBranchForm() {
       <div className="grid gap-2">
         <div>
           <Label htmlFor="opening_time">Opening Time</Label>
-          <Input
-
-            id="open_time"
-            name="open_time"
-            type="time"
-            required
-          />
+          <Input id="open_time" name="open_time" type="time" required />
         </div>
         <div>
           <Label htmlFor="close_time">Closing Time</Label>
-          <Input
-            id="close_time"
-            name="close_time"
-            type="time"  
-            required
-          />
+          <Input id="close_time" name="close_time" type="time" required />
         </div>
       </div>
       <Button type="submit" className="w-full">

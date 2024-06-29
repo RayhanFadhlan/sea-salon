@@ -74,4 +74,4 @@ export const ReservationTable = ({ userID }: ReservationTableProps) => {
       </Table>
     </div>
   );
-}
+};

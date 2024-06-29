@@ -2,8 +2,8 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import ServicesSection from "@/components/services-section";
 import ContactSection from "@/components/contacts-section";
-import { ScissorsLineDashed } from 'lucide-react';
-import Image from 'next/image';
+import { ScissorsLineDashed } from "lucide-react";
+import Image from "next/image";
 
 export default function Home() {
   return (
@@ -18,18 +18,20 @@ export default function Home() {
               Explore the Full Range of Our Exceptional Services
             </p>
             <div className="flex gap-4">
-              <Button variant={"secondary"}>
-                Our Reviews
-              </Button>
-              <Button>
-                Reserve
-              </Button>
+              <Button variant={"secondary"}>Our Reviews</Button>
+              <Button>Reserve</Button>
             </div>
           </div>
         </div>
         <div className="w-full md:w-[40%] h-[60vh] md:h-[80vh]  flex justify-center items-center">
-        <div className="max-w-full h-full">
-            <Image src="/tes.png" alt="salon" width={600} height={400} layout="responsive" />
+          <div className="max-w-full h-full">
+            <Image
+              src="/tes.png"
+              alt="salon"
+              width={600}
+              height={400}
+              layout="responsive"
+            />
           </div>
         </div>
       </div>
