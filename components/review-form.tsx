@@ -42,7 +42,7 @@ const ReviewForm = () => {
       if (response.ok) {
         console.log("Review submitted successfully");
         console.log(await response.json());
-        revalidatePath("/review");
+        
       } else {
         // Handle non-200 responses
         const errorResponse = await response.json();
@@ -52,6 +52,8 @@ const ReviewForm = () => {
       console.error("Error submitting review");
       console.error(error);
     }
+    revalidatePath("/review");
+
   };
 
   return (
