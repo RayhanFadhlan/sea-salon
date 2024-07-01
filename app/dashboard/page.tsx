@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button"; // Assuming you have a Button c
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { getServerSession } from "next-auth";
-import { authOptions } from "../api/auth/[...nextauth]/route";
+import { authOptions } from "@/app/utils/authOptions";
 import { getReservationsByID } from "../actions/actions";
 
 export default async function Dashboard() {

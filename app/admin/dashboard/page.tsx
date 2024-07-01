@@ -1,5 +1,5 @@
 import { getBranches } from "@/app/actions/actions";
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import { authOptions } from "@/app/utils/authOptions";
 import { AddBranchForm } from "@/components/add-branch-form";
 import { AddServiceForm } from "@/components/add-service-form";
 import { getServerSession } from "next-auth";

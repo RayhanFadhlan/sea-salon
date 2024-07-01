@@ -5,7 +5,7 @@ import { ReserveForm } from "@/components/reserve-form";
 import { redirect } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { getServerSession } from "next-auth";
-import { authOptions } from "../api/auth/[...nextauth]/route";
+import { authOptions } from "@/app/utils/authOptions";
 
 
 
