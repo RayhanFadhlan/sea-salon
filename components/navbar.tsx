@@ -1,3 +1,4 @@
+"use client";
 import { Menu } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";

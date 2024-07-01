@@ -12,25 +12,30 @@ import {
 } from "@/components/ui/select";
 import { useToast } from "./ui/use-toast";
 import { prisma } from "@/lib/prisma";
+import { Branch } from "@prisma/client";
+import { useRouter } from "next/navigation";
 
-interface Branch {
-  id: number;
-  name: string;
+interface AddServiceFormProps {
+  branches: Branch[];
 }
 
-export function AddServiceForm() {
-  const [branches, setBranches] = useState([]);
+export function AddServiceForm( { branches }: AddServiceFormProps) {
+  // const [branches, setBranches] = useState([]);
   const { toast } = useToast();
+  const router  = useRouter();
+  // useEffect(() => {
+  //   const fetchBranches = async () => {
+  //     const response = await fetch("/api/admin/addservice",{
+  //       method: "GET",
+  //       cache: "no-store",
+  
+  //     });
+  //     const data = await response.json();
+  //     setBranches(data);
+  //   };
 
-  useEffect(() => {
-    const fetchBranches = async () => {
-      const response = await fetch("/api/admin/addservice");
-      const data = await response.json();
-      setBranches(data);
-    };
-
-    fetchBranches();
-  }, []);
+  //   fetchBranches();
+  // }, []);
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -45,16 +50,18 @@ export function AddServiceForm() {
       });
       if (response.ok) {
         toast({ description: "Service added successfully" });
-        form.reset();
       } else {
         const errorResponse = await response.json();
         toast({ description: errorResponse.message, variant: "destructive" });
-        form.reset();
+        
       }
     } catch (error) {
       toast({ description: "An error occurred", variant: "destructive" });
     }
+    router.refresh();
   };
+
+
   return (
     <form onSubmit={handleSubmit} className="w-full max-w-[400px] space-y-4">
       <h2 className="text-2xl font-semibold">Add Service</h2>

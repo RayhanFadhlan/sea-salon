@@ -4,13 +4,14 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "./ui/use-toast";
-import { redirect } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
 import { revalidatePath } from "next/cache";
 
 export function AddBranchForm() {
   const { toast } = useToast();
-
+  const router = useRouter();
   const handleSubmit = async (e: FormEvent) => {
+    
     e.preventDefault();
     const form = e.target as HTMLFormElement;
     const formData = new FormData(form);
@@ -31,6 +32,8 @@ export function AddBranchForm() {
     } catch (error) {
       toast({ description: "An error occurred", variant: "destructive" });
     }
+    form.reset();
+    router.refresh();
   };
 
   return (

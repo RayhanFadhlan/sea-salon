@@ -20,10 +20,13 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "./ui/textarea";
-import { revalidatePath } from "next/cache";
-
+import { useToast } from "./ui/use-toast";
+import { useRouter } from 'next/navigation'
 const ReviewForm = () => {
+  const { toast } = useToast();
+  const router = useRouter()
   const handleSubmit = async (e: FormEvent) => {
+    e.preventDefault();
     console.log("Form submitted");
 
     const form = e.target as HTMLFormElement;
@@ -34,26 +37,24 @@ const ReviewForm = () => {
     try {
       const response = await fetch("/api/review", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
         body: JSON.stringify(formObject),
       });
       if (response.ok) {
         console.log("Review submitted successfully");
-        console.log(await response.json());
+        toast({ description: "Review submitted successfully" });
+        
         
       } else {
         // Handle non-200 responses
         const errorResponse = await response.json();
-        console.error("Error submitting review:", errorResponse.message);
+        toast({ description: errorResponse.message, variant: "destructive" });
       }
     } catch (error) {
       console.error("Error submitting review");
-      console.error(error);
+      toast({ description: "An error occurred", variant: "destructive" });
     }
-    revalidatePath("/review");
-
+    router.refresh();
+    form.reset();
   };
 
   return (

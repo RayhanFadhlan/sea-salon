@@ -1,3 +1,4 @@
+"use client";
 import { useEffect, useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -69,7 +70,11 @@ export function ReserveForm({ user_id }: ReserveFormProps) {
   useEffect(() => {
     const fetchBranches = async () => {
       try {
-        const response = await fetch("/api/branch");
+        const response = await fetch("/api/branch",{
+          method: "GET",
+          cache: "no-store",
+        
+        });
         const responseData = await response.json();
         setBranches(responseData.data);
       } catch (error) {
@@ -83,7 +88,10 @@ export function ReserveForm({ user_id }: ReserveFormProps) {
   const fetchServices = async (branchId: number) => {
     try {
       const response = await fetch(
-        `/api/servicesByBranch?branch_id=${branchId}`,
+        `/api/servicesByBranch?branch_id=${branchId}`,{
+          method: "GET",
+          cache: "no-store",
+        }
       );
       const responseData = await response.json();
       setServices(responseData.data);

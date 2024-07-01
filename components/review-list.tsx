@@ -1,21 +1,34 @@
-import React from "react";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Star } from "lucide-react"; // Import Star icon for ratings
 import { prisma } from "@/lib/prisma"; // Import Prisma client
+import { Review } from "@prisma/client";
 
-type Review = {
-  id: number;
-  name: string;
-  rating: number;
-  comment: string;
-};
 
-export async function ReviewList() {
-  const reviews = await prisma.review.findMany();
+export function ReviewList({
+  reviews,
+}: {
+  reviews?: Review[];
 
+}){
+  // const [reviews, setReviews] = useState([]);
+
+  // useEffect(() => {
+  //   async function fetchReviews() {
+  //     const response = await fetch('/api/review', {
+  //       method: 'GET',
+      
+  //     });
+  //     const data = await response.json();
+
+  //     setReviews(data.data);
+  //   }
+
+  //   fetchReviews();
+  // }, []); 
+  
   return (
     <div className="mt-6 grid gap-6">
-      {reviews.map((review: Review) => (
+      {reviews?.map((review: Review) => (
         <div key={review.id} className="grid gap-4">
           <div className="flex items-start gap-4">
             <Avatar className="w-10 h-10 border">

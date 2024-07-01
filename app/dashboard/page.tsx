@@ -1,20 +1,35 @@
-"use client";
 import { ReservationTable } from "@/components/reservation-table";
 import { Button } from "@/components/ui/button"; // Assuming you have a Button component in your UI library
 import Link from "next/link";
-import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
-export default function Dashboard() {
-  const { data: session, status } = useSession();
-  if (status === "loading") {
-    return <div>Loading...</div>;
-  }
-  if (status !== "authenticated") {
+import { getServerSession } from "next-auth";
+import { authOptions } from "../api/auth/[...nextauth]/route";
+import { getReservationsByID } from "../actions/actions";
+
+export default async function Dashboard() {
+
+
+  const session = await getServerSession(authOptions);
+  
+
+  if(!session){
     redirect("/signin");
   }
-  if (session.role === "ADMIN") {
+  if(session.role === "ADMIN"){
     redirect("/admin/dashboard");
   }
+  const reservations = await getReservationsByID(session.id);
+  
+  // const { data: session, status } = useSession();
+  // if (status === "loading") {
+  //   return <div>Loading...</div>;
+  // }
+  // if (status !== "authenticated") {
+  //   redirect("/signin");
+  // }
+  // if (session.role === "ADMIN") {
+  //   redirect("/admin/dashboard");
+  // }
   // console.log(status);
 
   return (
@@ -24,7 +39,7 @@ export default function Dashboard() {
         <Link href="/reserve">
           <Button variant={"link"}>Book a reservation</Button>
         </Link>
-        <ReservationTable userID={session.id} />
+        <ReservationTable reservations={reservations} />
       </div>
     </div>
   );
