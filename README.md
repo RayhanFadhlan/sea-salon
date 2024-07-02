@@ -1,4 +1,6 @@
 <h1 align="center">Sea Salon</h1>
+<p align="center"><img src= "/public/invert-hero.png" width=200 ></p>
+<p align="center">Image taken from <a href="https://www.pngwing.com/en/free-png-ztpkv">pngwing</a></p></p>
 
 # Description
 Sea Salon is designed to offer a relaxing and rejuvenating environment where you can enjoy a variety of beauty and wellness services. Our mission is to ensure you leave our salon feeling refreshed and confident. This app alows user to make a reservation and make a reviews within the app.
@@ -44,4 +46,11 @@ The review page enables customers to leave feedback about their experiences at S
 ### Services
 
 The services page provides detailed information about the various services offered by Sea Salon across all the branches. Each service is described in detail, including the duration and branch location.
+
+#### Admin Account
+To access admin Account to add branch and service, you can use this credentials
+```
+email : thomas.n@compfest.id
+password : Admin123
+```
 
