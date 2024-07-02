@@ -18,7 +18,7 @@ export function AddBranchForm() {
     const formObject = Object.fromEntries(formData.entries());
 
     try {
-      const response = await fetch("/api/admin/addbranch", {
+      const response = await fetch("/api/branch", {
         method: "POST",
 
         body: JSON.stringify(formObject),

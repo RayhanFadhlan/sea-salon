@@ -74,3 +74,62 @@ export async function getBranches(){
     return [];
   }
 }
+
+export async function getServices(){
+  try{
+    const services = await prisma.service.findMany();
+    return services;
+  }
+  catch(e){
+    console.log(e);
+    return [];
+  }
+}
+
+export async function getServiceBranches(){
+  try{
+    const servicebranches = await prisma.serviceBranch.findMany();
+    return servicebranches;
+  }
+  catch(e){
+    console.log(e);
+    return [];
+  }
+}
+
+export async function getServicesWithLoc() {
+  try {
+    const servicesWithBranches = await prisma.service.findMany({
+      include: {
+        branches: {
+          include: {
+            branch: true,
+          },
+        },
+      },
+    });
+
+    const serviceMap = new Map<string, Set<string>>();
+
+    servicesWithBranches.forEach(service => {
+      service.branches.forEach(sb => {
+        if (!serviceMap.has(service.name)) {
+          serviceMap.set(service.name, new Set());
+        }
+        serviceMap.get(service.name)!.add(sb.branch.name);
+      });
+    });
+
+    const formattedData = Array.from(serviceMap.entries()).map(([serviceName, branchSet]) => {
+      return {
+        serviceName,
+        branchNames: Array.from(branchSet).join(', '),
+      };
+    });
+
+    return formattedData;
+  } catch (error) {
+    console.log(error);
+    return [];
+  }
+}

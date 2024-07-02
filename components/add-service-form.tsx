@@ -19,23 +19,10 @@ interface AddServiceFormProps {
   branches: Branch[];
 }
 
-export function AddServiceForm( { branches }: AddServiceFormProps) {
-  // const [branches, setBranches] = useState([]);
+export function AddServiceForm({ branches }: AddServiceFormProps) {
   const { toast } = useToast();
-  const router  = useRouter();
-  // useEffect(() => {
-  //   const fetchBranches = async () => {
-  //     const response = await fetch("/api/admin/addservice",{
-  //       method: "GET",
-  //       cache: "no-store",
-  
-  //     });
-  //     const data = await response.json();
-  //     setBranches(data);
-  //   };
+  const router = useRouter();
 
-  //   fetchBranches();
-  // }, []);
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -44,7 +31,7 @@ export function AddServiceForm( { branches }: AddServiceFormProps) {
     const formObject = Object.fromEntries(formData.entries());
 
     try {
-      const response = await fetch("/api/admin/addservice", {
+      const response = await fetch("/api/service", {
         method: "POST",
         body: JSON.stringify(formObject),
       });
@@ -53,14 +40,12 @@ export function AddServiceForm( { branches }: AddServiceFormProps) {
       } else {
         const errorResponse = await response.json();
         toast({ description: errorResponse.message, variant: "destructive" });
-        
       }
     } catch (error) {
       toast({ description: "An error occurred", variant: "destructive" });
     }
     router.refresh();
   };
-
 
   return (
     <form onSubmit={handleSubmit} className="w-full max-w-[400px] space-y-4">
