@@ -133,3 +133,26 @@ export async function getServicesWithLoc() {
     return [];
   }
 }
+
+
+export async function getBranchesInfo(){
+  const branches = await prisma.branch.findMany({
+    include: {
+      services: {
+        include: {
+          service: true,
+        }
+      }
+    }
+  });
+
+  return branches.map(branch => ({
+    name: branch.name,
+    services: branch.services.map(serviceBranch => ({
+      name: serviceBranch.service.name,
+      time: serviceBranch.service.duration.toString()
+    })),
+    address: branch.location,
+    hours: `${branch.open_time} - ${branch.close_time}`
+  }));
+}
