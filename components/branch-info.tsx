@@ -7,7 +7,13 @@ import {
   CardFooter,
 } from "../components/ui/card";
 
-export default function BranchesInfoCard({ branchesInfo }) {
+interface BranchesInfoCardProps {
+  branchesInfo: BranchInfo[];
+}
+
+export default function BranchesInfoCard({
+  branchesInfo,
+}: BranchesInfoCardProps) {
   return (
     <div className="container mx-auto px-4 py-8 max-w-8xl  items-center flex-col flex min-h-screen">
       <h1 className="text-3xl font-bold mb-8 pt-8">

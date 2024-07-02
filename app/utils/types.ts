@@ -8,3 +8,17 @@ type ReservationData =  {
     time: string;
     date: string;
   }
+
+  type ServiceInfo =  {
+    name: string;
+    time: string;
+  }
+  
+  type BranchInfo =  {
+    name: string;
+    services: ServiceInfo[];
+    address: string;
+    hours: string;
+  }
+
+  
