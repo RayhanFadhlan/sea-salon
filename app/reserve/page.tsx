@@ -1,4 +1,4 @@
-export const dynamic = "force-dynamic";
+// export const dynamic = "force-dynamic";
 import { ReserveForm } from "@/components/reserve-form";
 
 import { redirect } from "next/navigation";

@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/utils/authOptions";
+import { revalidatePath } from "next/cache";
 
 export const POST = async (req: Request) => {
   const session = await getServerSession(authOptions);
@@ -62,7 +63,8 @@ export const POST = async (req: Request) => {
         branch_id: branchRecord.id,
       },
     });
-
+    revalidatePath("/")
+    revalidatePath("/reserve")
     return NextResponse.json(
       { message: "Service created successfully" },
       { status: 201 },
@@ -70,5 +72,6 @@ export const POST = async (req: Request) => {
   } catch (error: any) {
     return NextResponse.json({ message: error.message }, { status: 500 });
   }
+  
 };
 

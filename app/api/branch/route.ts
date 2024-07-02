@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/utils/authOptions";
+import { revalidatePath } from "next/cache";
 
 export const POST = async (req: Request) => {
   const session = await getServerSession(authOptions);
@@ -11,7 +12,7 @@ export const POST = async (req: Request) => {
   if(session.role !== "ADMIN"){
     return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
   }
-  
+
   if (req.method !== "POST") {
     return NextResponse.json(
       { message: "Method not allowed" },
@@ -38,6 +39,8 @@ export const POST = async (req: Request) => {
         close_time: close_time,
       },
     });
+    revalidatePath("/reserve");
+    revalidatePath("/")
     return NextResponse.json(
       { message: "Branch created successfully" },
       { status: 201 },

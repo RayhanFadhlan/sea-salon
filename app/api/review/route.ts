@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/prisma";
+import { revalidatePath } from "next/cache";
 
 
 export const POST = async (req: Request) => {
@@ -24,7 +25,7 @@ export const POST = async (req: Request) => {
       comment: data.comment,
     },
   });
-
+  revalidatePath("/review");
   return Response.json({
     status: 200,
     message: review,

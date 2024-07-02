@@ -1,4 +1,4 @@
-export const dynamic = "force-dynamic";
+// export const dynamic = "force-dynamic";
 import React from "react";
 import { ReviewList } from "@/components/review-list";
 import ReviewForm from "@/components/review-form";
