@@ -1,50 +1,13 @@
+import { authOptions } from "@/app/utils/authOptions";
 import { prisma } from "@/lib/prisma";
-
-export const GET = async (req: Request) => {
-  const url = new URL(req.url);
-  // Extract the user_id query parameter
-  const userId = url.searchParams.get("user_id");
-
-  // Check if user_id is provided and is a valid number
-  if (!userId || isNaN(Number(userId))) {
-    return new Response(
-      JSON.stringify({
-        error: "Invalid or missing user_id query parameter",
-      }),
-      { status: 400 },
-    );
-  }
-
-  const reservations = await prisma.reservation.findMany({
-    where: {
-      user_id: Number(userId),
-    },
-    include: {
-      branch: true,
-      service: true,
-    },
-  });
-
-  const ret = reservations.map((reservation) => {
-    return {
-      id: reservation.id,
-      user_name: reservation.name,
-      phone: reservation.phone,
-      branch_name: reservation.branch.name,
-      service_name: reservation.service.name,
-      duration: reservation.service.duration,
-      time: reservation.time,
-      date: reservation.date,
-    };
-  });
-
-  return Response.json({
-    status: 200,
-    data: ret,
-  });
-};
+import { getServerSession } from "next-auth";
 
 export const POST = async (req: Request) => {
+  const session = await getServerSession(authOptions);
+  if(!session){
+    return Response.json({ message: "Unauthorized" }, { status: 401 });
+  }
+
   if (req.method !== "POST") {
     return Response.json({ message: "Method not allowed" }, { status: 405 });
   }
@@ -96,22 +59,5 @@ export const POST = async (req: Request) => {
     });
   }
 
-  // if(!data.name || !data.phone || !data.branch || !data.service || !data.time){
-  //     return Response.json({
-  //         status: 400,
-  //         message: 'Please provide name, phone, branch, service, and time'
-  //     })
-  // }
-  // const service = await prisma.service.findUnique({
-  //     where: {
-  //         name: data.service
-  //     }
-  // });
-  // const branch = await prisma.branch.findUnique({
-  //     where: {
-  //         name: data.branch
-  //     }
-  // });
 
-  // if ()
 };

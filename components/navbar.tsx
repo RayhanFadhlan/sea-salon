@@ -18,9 +18,7 @@ const navLinks = [
 export default function Navbar() {
   const { data: session, status } = useSession();
   const isLoggedIn = status === "authenticated";
-  // const router = useRouter();
-  // const currentPath = router.pathname;
-  // console.log(currentPath);
+
   const currentPath = usePathname();
   return (
     <header className="top-0 flex h-16 items-center gap-4 border-b bg-background px-4 md:px-6">

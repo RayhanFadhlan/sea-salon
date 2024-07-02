@@ -30,23 +30,13 @@ import {
 } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/components/ui/use-toast";
-
-type Branch = {
-  id: number;
-  name: string;
-  location: string;
-  open_time: string;
-  close_time: string;
-};
-
-type Service = {
-  id: number;
-  name: string;
-  duration: number;
-};
+import { Branch, Service, ServiceBranch } from "@prisma/client";
 
 type ReserveFormProps = {
   user_id: number;
+  branches: Branch[];
+  services: Service[];
+  servicebranches: ServiceBranch[];
 };
 
 const reservationSchema = z.object({
@@ -57,60 +47,41 @@ const reservationSchema = z.object({
   date: z.date(),
   time: z.string(),
 });
-
-export function ReserveForm({ user_id }: ReserveFormProps) {
+export function ReserveForm({
+  user_id,
+  branches,
+  services,
+  servicebranches,
+}: ReserveFormProps) {
   const { toast } = useToast();
   const form = useForm<z.infer<typeof reservationSchema>>({
     resolver: zodResolver(reservationSchema),
   });
 
-  const [branches, setBranches] = useState<Branch[]>([]);
-  const [services, setServices] = useState<Service[]>([]);
+  const [selectedBranch, setSelectedBranch] = useState<number | null>(null);
+  const [filteredServices, setFilteredServices] = useState<Service[]>([]);
 
-  useEffect(() => {
-    const fetchBranches = async () => {
-      try {
-        const response = await fetch("/api/branch",{
-          method: "GET",
-          cache: "no-store",
-        
-        });
-        const responseData = await response.json();
-        setBranches(responseData.data);
-      } catch (error) {
-        console.error("Failed to fetch branches:", error);
-      }
-    };
+  const onBranchChange = (value: string) => {
+    const branchId = Number(value);
+    setSelectedBranch(branchId);
+    form.setValue("branch_id", branchId);
 
-    fetchBranches();
-  }, []);
-
-  const fetchServices = async (branchId: number) => {
-    try {
-      const response = await fetch(
-        `/api/servicesByBranch?branch_id=${branchId}`,{
-          method: "GET",
-          cache: "no-store",
-        }
-      );
-      const responseData = await response.json();
-      setServices(responseData.data);
-    } catch (error) {
-      console.error("Failed to fetch services:", error);
-    }
+    // Filter services based on selected branch
+    const branchServices = servicebranches
+      .filter((sb) => sb.branch_id === branchId)
+      .map((sb) => services.find((service) => service.id === sb.service_id)!)
+      .filter((service): service is Service => service !== undefined);
+    setFilteredServices(branchServices);
+    form.setValue("service_id", 0);
   };
 
-  const onBranchChange = (branchId: string) => {
-    form.setValue("branch_id", parseInt(branchId, 10));
-    fetchServices(Number(branchId));
-  };
-
-  const onServiceChange = (serviceId: string) => {
-    form.setValue("service_id", parseInt(serviceId, 10));
+  const onServiceChange = (value: string) => {
+    const serviceId = Number(value);
+    form.setValue("service_id", serviceId);
   };
 
   const onSubmit: SubmitHandler<z.infer<typeof reservationSchema>> = async (
-    data,
+    data
   ) => {
     const formattedDate = format(new Date(data.date), "yyyy-MM-dd");
     const formattedData = {
@@ -206,6 +177,7 @@ export function ReserveForm({ user_id }: ReserveFormProps) {
               <Select
                 onValueChange={onServiceChange}
                 defaultValue={field.value?.toString()}
+                disabled={!selectedBranch}
               >
                 <FormControl>
                   <SelectTrigger>
@@ -213,7 +185,7 @@ export function ReserveForm({ user_id }: ReserveFormProps) {
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  {services.map((service) => (
+                  {filteredServices.map((service) => (
                     <SelectItem key={service.id} value={String(service.id)}>
                       {service.name}
                     </SelectItem>
@@ -237,7 +209,7 @@ export function ReserveForm({ user_id }: ReserveFormProps) {
                       variant={"outline"}
                       className={cn(
                         "w-[240px] pl-3 text-left font-normal",
-                        !field.value && "text-muted-foreground",
+                        !field.value && "text-muted-foreground"
                       )}
                     >
                       {field.value ? (

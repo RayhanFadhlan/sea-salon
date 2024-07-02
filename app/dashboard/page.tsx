@@ -1,5 +1,5 @@
 import { ReservationTable } from "@/components/reservation-table";
-import { Button } from "@/components/ui/button"; // Assuming you have a Button component in your UI library
+import { Button } from "@/components/ui/button"; 
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { getServerSession } from "next-auth";
@@ -20,17 +20,6 @@ export default async function Dashboard() {
   }
   const reservations = await getReservationsByID(session.id);
   
-  // const { data: session, status } = useSession();
-  // if (status === "loading") {
-  //   return <div>Loading...</div>;
-  // }
-  // if (status !== "authenticated") {
-  //   redirect("/signin");
-  // }
-  // if (session.role === "ADMIN") {
-  //   redirect("/admin/dashboard");
-  // }
-  // console.log(status);
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen py-12 space-y-8">

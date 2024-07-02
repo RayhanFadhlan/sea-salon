@@ -10,21 +10,6 @@ export function ReviewList({
   reviews?: Review[];
 
 }){
-  // const [reviews, setReviews] = useState([]);
-
-  // useEffect(() => {
-  //   async function fetchReviews() {
-  //     const response = await fetch('/api/review', {
-  //       method: 'GET',
-      
-  //     });
-  //     const data = await response.json();
-
-  //     setReviews(data.data);
-  //   }
-
-  //   fetchReviews();
-  // }, []); 
   
   return (
     <div className="mt-6 grid gap-6">

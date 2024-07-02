@@ -9,15 +9,13 @@ import {
 } from "@/components/ui/table";
 import { useEffect, useState } from "react";
 interface ReservationTableProps {
-  reservations: ReservationData[];  
+  reservations: ReservationData[];
 }
 
-export const ReservationTable = ({ reservations}: ReservationTableProps) => {
- 
+export const ReservationTable = ({ reservations }: ReservationTableProps) => {
   return (
     <div className="flex items-center justify-center py-4">
       <Table className="w-[90%] mx-auto">
-        <TableCaption>Your past reservation</TableCaption>
         <TableHeader>
           <TableRow>
             <TableHead>Booking ID</TableHead>
