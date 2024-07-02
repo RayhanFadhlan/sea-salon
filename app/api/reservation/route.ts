@@ -1,6 +1,7 @@
 import { authOptions } from "@/app/utils/authOptions";
 import { prisma } from "@/lib/prisma";
 import { getServerSession } from "next-auth";
+import { revalidatePath } from "next/cache";
 
 export const POST = async (req: Request) => {
   const session = await getServerSession(authOptions);
@@ -48,6 +49,7 @@ export const POST = async (req: Request) => {
     const reservation = await prisma.reservation.create({
       data: data,
     });
+    revalidatePath("/dashboard")
     return Response.json({
       status: 200,
       message: "Reservation created",
