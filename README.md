@@ -1,36 +1,47 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+<h1 align="center">Sea Salon</h1>
 
-## Getting Started
+# Description
+Sea Salon is designed to offer a relaxing and rejuvenating environment where you can enjoy a variety of beauty and wellness services. Our mission is to ensure you leave our salon feeling refreshed and confident. This app alows user to make a reservation and make a reviews within the app.
 
-First, run the development server:
+# How To Run
+To access the app you can go to :
+- [seasalon.rayhanfa.me](https://seasalon.rayhanfa.me/)
+- [sea-salon-xi.vercel.app](https://sea-salon-xi.vercel.app/)
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+# Tools Used
+- NextJS 14 App Router(Frontend & Backend)
+- TypeScript
+- Shadcn UI
+- Prisma ORM
+- NextAuth
+- bcrypt (password hashing)
+- Deployed on Vercel
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+# Pages
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Landing Page
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+The landing page is the first page users see when they visit Sea Salon's website. It provides an overview of the services offered.
 
-## Learn More
+### Dashboard
 
-To learn more about Next.js, take a look at the following resources:
+#### Customer Dashboard
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+The customer dashboard allows users to see their past reservations.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+#### Admin Dashboard
 
-## Deploy on Vercel
+The admin dashboard is designed for the admins to add new branch and new services for the Sea Salon app.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### Reservation
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+The reservation page allows users to book appointments for their desired services. Users can select a branch, choose a service, and pick a date and time complete the booking. The reservation system ensures that appointments are scheduled efficiently and conveniently.
+
+### Review
+
+The review page enables customers to leave feedback about their experiences at Sea Salon. Users can rate give a ratin, write comments, and read reviews from other customers. This page helps Sea Salon maintain high service standards by listening to customer feedback.
+
+### Services
+
+The services page provides detailed information about the various services offered by Sea Salon across all the branches. Each service is described in detail, including the duration and branch location.
+
