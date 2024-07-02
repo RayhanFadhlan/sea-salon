@@ -21,10 +21,10 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "./ui/textarea";
 import { useToast } from "./ui/use-toast";
-import { useRouter } from 'next/navigation'
+import { useRouter } from "next/navigation";
 const ReviewForm = () => {
   const { toast } = useToast();
-  const router = useRouter()
+  const router = useRouter();
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     console.log("Form submitted");
@@ -42,8 +42,6 @@ const ReviewForm = () => {
       if (response.ok) {
         console.log("Review submitted successfully");
         toast({ description: "Review submitted successfully" });
-        
-        
       } else {
         // Handle non-200 responses
         const errorResponse = await response.json();
@@ -58,7 +56,7 @@ const ReviewForm = () => {
   };
 
   return (
-    <Card className="w-full">
+    <Card className="w-full border-none">
       <CardHeader>
         <CardTitle>Leave a Review</CardTitle>
         <CardDescription>Share your feedback about our salon.</CardDescription>
