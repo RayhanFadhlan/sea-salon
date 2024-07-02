@@ -10,6 +10,12 @@ import SessionWrapper from "@/components/session-wrapper";
 
 const inter = Inter({ subsets: ["latin"] });
 
+export const metadata: Metadata = {
+  title: "Sea Salon",
+  description:
+    "Sea Salon is a salon and spa that offer a wide range of services to help you look and feel your best. Book an appointment today!",
+};
+
 export default function RootLayout({
   children,
 }: {
